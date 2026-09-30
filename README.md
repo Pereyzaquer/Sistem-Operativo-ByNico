@@ -4,7 +4,7 @@ Un mini sistema operativo *bare-metal* para **ARM Cortex-A8**, escrito en C y As
 
 El objetivo es entender lo que casi siempre se da por hecho: cómo un sistema consigue que **la memoria funcione** y que **varios programas corran a la vez** sobre una sola CPU. Para eso implementa a mano memoria virtual, niveles de privilegio, interrupciones, syscalls y cambio de contexto.
 
-Proyecto de la materia Técnicas Digitales III (UTN FRBA), 2025.
+Proyecto universitario (UTN FRBA), 2025.
 La explicación completa, paso a paso, está en la nota del portfolio de Nicolás Pereyra Pigerl.
 
 ## Qué hace
