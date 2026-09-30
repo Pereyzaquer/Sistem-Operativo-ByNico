@@ -1,0 +1,13 @@
+{
+    "files.associations": {
+        "sys_tick.h": "c",
+        "irq_handler.h": "c",
+        "timer.h": "c",
+        "gic.h": "c",
+        "mmu.h": "c",
+        "stddef.h": "c",
+        "board_init.h": "c",
+        "string.h": "c",
+        "untitled-1": "c"
+    }
+}

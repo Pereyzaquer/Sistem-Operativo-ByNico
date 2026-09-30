@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 460" font-family="system-ui, Segoe UI, Arial, sans-serif" font-size="13">
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#1d1b18"/></marker>
+  </defs>
+  <rect width="760" height="460" rx="10" fill="#fdfbf7" stroke="#d9d3c5"/>
+  <text x="380" y="30" text-anchor="middle" font-size="16" font-weight="600" fill="#1d1b18">Modos de ejecución de ARMv7 y por qué el kernel no corre siempre</text>
+
+  <!-- user box -->
+  <rect x="30" y="55" width="270" height="345" rx="8" fill="#dde6f0" stroke="#3d5a80" stroke-width="1.6"/>
+  <text x="165" y="80" text-anchor="middle" font-weight="600" fill="#3d5a80">Sin privilegios (PL0)</text>
+  <rect x="55" y="100" width="220" height="90" rx="6" fill="#fdfbf7" stroke="#3d5a80"/>
+  <text x="165" y="125" text-anchor="middle" font-weight="600" fill="#1d1b18">User · CPSR.M = 0x10</text>
+  <text x="165" y="146" text-anchor="middle" font-size="12" fill="#1d1b18">Tarea 1 y Tarea 2</text>
+  <text x="165" y="164" text-anchor="middle" font-size="12" fill="#6b665d">Solo ven sus páginas (AP = 11)</text>
+  <text x="165" y="180" text-anchor="middle" font-size="12" fill="#6b665d">No pueden tocar TTBR0, CPSR, GIC…</text>
+  <text x="165" y="230" text-anchor="middle" font-size="12" fill="#1d1b18">Si intentan salirse:</text>
+  <text x="165" y="248" text-anchor="middle" font-size="12" fill="#b4441c">Data Abort → modo ABT</text>
+  <text x="165" y="266" text-anchor="middle" font-size="12" fill="#b4441c">Instrucción privilegiada → UND</text>
+  <text x="165" y="330" text-anchor="middle" font-size="12" fill="#1d1b18">Si se cuelga una tarea,</text>
+  <text x="165" y="348" text-anchor="middle" font-size="12" fill="#1d1b18">el kernel sigue vivo y el</text>
+  <text x="165" y="366" text-anchor="middle" font-size="12" fill="#1d1b18">timer le quita la CPU.</text>
+
+  <!-- privileged box -->
+  <rect x="460" y="55" width="270" height="345" rx="8" fill="#f0dcd2" stroke="#b4441c" stroke-width="1.6"/>
+  <text x="595" y="80" text-anchor="middle" font-weight="600" fill="#b4441c">Privilegiados (PL1)</text>
+  <g font-size="12" fill="#1d1b18">
+    <rect x="480" y="95" width="230" height="40" rx="5" fill="#fdfbf7" stroke="#b4441c"/>
+    <text x="490" y="112" font-weight="600">SVC · 0x13</text><text x="490" y="127" fill="#6b665d">syscalls (instrucción SVC #0)</text>
+    <rect x="480" y="143" width="230" height="40" rx="5" fill="#fdfbf7" stroke="#b4441c"/>
+    <text x="490" y="160" font-weight="600">IRQ · 0x12</text><text x="490" y="175" fill="#6b665d">timer → scheduler → cambio de contexto</text>
+    <rect x="480" y="191" width="230" height="40" rx="5" fill="#fdfbf7" stroke="#b4441c"/>
+    <text x="490" y="208" font-weight="600">ABT · 0x17</text><text x="490" y="223" fill="#6b665d">accesos a memoria inválidos</text>
+    <rect x="480" y="239" width="230" height="40" rx="5" fill="#fdfbf7" stroke="#b4441c"/>
+    <text x="490" y="256" font-weight="600">UND · 0x1B</text><text x="490" y="271" fill="#6b665d">instrucción no válida</text>
+    <rect x="480" y="287" width="230" height="40" rx="5" fill="#fdfbf7" stroke="#b4441c"/>
+    <text x="490" y="304" font-weight="600">FIQ · 0x11</text><text x="490" y="319" fill="#6b665d">interrupción rápida (sin uso aquí)</text>
+    <rect x="480" y="335" width="230" height="40" rx="5" fill="#fdfbf7" stroke="#b4441c"/>
+    <text x="490" y="352" font-weight="600">System · 0x1F</text><text x="490" y="367" fill="#6b665d">idle; comparte registros con User</text>
+  </g>
+
+  <!-- arrows -->
+  <line x1="300" y1="130" x2="458" y2="115" stroke="#1d1b18" stroke-width="1.6" marker-end="url(#a)"/>
+  <text x="380" y="112" text-anchor="middle" font-size="11" fill="#1d1b18">SVC #0</text>
+  <line x1="300" y1="170" x2="458" y2="163" stroke="#1d1b18" stroke-width="1.6" marker-end="url(#a)"/>
+  <text x="380" y="158" text-anchor="middle" font-size="11" fill="#1d1b18">interrupción</text>
+  <line x1="458" y1="270" x2="302" y2="215" stroke="#1d1b18" stroke-width="1.6" marker-end="url(#a)"/>
+  <text x="385" y="255" text-anchor="middle" font-size="11" fill="#1d1b18">MOVS PC, LR</text>
+  <text x="385" y="270" text-anchor="middle" font-size="11" fill="#6b665d">(SPSR → CPSR)</text>
+
+  <text x="380" y="428" text-anchor="middle" font-size="12" fill="#6b665d">Entrar al kernel solo es posible por una excepción; salir restaura el modo guardado en SPSR.</text>
+  <text x="380" y="446" text-anchor="middle" font-size="12" fill="#6b665d">Cada modo tiene su propio SP (registro "banked"), por eso startup.s inicializa un stack por modo.</text>
+</svg>

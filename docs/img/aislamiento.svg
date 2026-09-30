@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 470" font-family="system-ui, Segoe UI, Arial, sans-serif" font-size="13">
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#3d5a80"/></marker>
+    <marker id="b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#b4441c"/></marker>
+  </defs>
+  <rect width="760" height="470" rx="10" fill="#fdfbf7" stroke="#d9d3c5"/>
+  <text x="380" y="30" text-anchor="middle" font-size="16" font-weight="600" fill="#1d1b18">Cada tarea ve solo lo que su tabla de páginas le mapea</text>
+
+  <!-- task 1 -->
+  <rect x="25" y="55" width="190" height="80" rx="6" fill="#dde6f0" stroke="#3d5a80"/>
+  <text x="120" y="80" text-anchor="middle" font-weight="600" fill="#1d1b18">Tarea 1 (modo usuario)</text>
+  <text x="120" y="100" text-anchor="middle" font-size="12" fill="#1d1b18">TTBR0 = 0x70080000</text>
+  <text x="120" y="118" text-anchor="middle" font-size="12" fill="#6b665d">L1 propia + L2 propias</text>
+
+  <!-- task 2 -->
+  <rect x="545" y="55" width="190" height="80" rx="6" fill="#f0dcd2" stroke="#b4441c"/>
+  <text x="640" y="80" text-anchor="middle" font-weight="600" fill="#1d1b18">Tarea 2 (modo usuario)</text>
+  <text x="640" y="100" text-anchor="middle" font-size="12" fill="#1d1b18">TTBR0 = 0x70090000</text>
+  <text x="640" y="118" text-anchor="middle" font-size="12" fill="#6b665d">L1 propia + L2 propias</text>
+
+  <!-- physical ram -->
+  <rect x="270" y="55" width="220" height="385" rx="6" fill="#ece7db" stroke="#6b665d"/>
+  <text x="380" y="78" text-anchor="middle" font-weight="600" fill="#1d1b18">RAM física</text>
+
+  <g font-size="12" fill="#1d1b18" text-anchor="middle">
+    <rect x="285" y="95" width="190" height="42" fill="#fdfbf7" stroke="#1d1b18"/>
+    <text x="380" y="113" font-weight="600">Kernel + vectores + timer/GIC</text>
+    <text x="380" y="129" fill="#6b665d">0x70022000 · solo privilegiado</text>
+
+    <rect x="285" y="150" width="190" height="42" fill="#dde6f0" stroke="#3d5a80"/>
+    <text x="380" y="168" font-weight="600">Código y stack de Tarea 1</text>
+    <text x="380" y="184" fill="#6b665d">0x70F50000</text>
+
+    <rect x="285" y="205" width="190" height="42" fill="#dde6f0" stroke="#3d5a80"/>
+    <text x="380" y="223" font-weight="600">Área de trabajo de Tarea 1</text>
+    <text x="380" y="239" fill="#6b665d">0x70A00000 · 64 KiB</text>
+
+    <rect x="285" y="275" width="190" height="42" fill="#f0dcd2" stroke="#b4441c"/>
+    <text x="380" y="293" font-weight="600">Área de trabajo de Tarea 2</text>
+    <text x="380" y="309" fill="#6b665d">0x70A10000 · 64 KiB</text>
+
+    <rect x="285" y="330" width="190" height="42" fill="#f0dcd2" stroke="#b4441c"/>
+    <text x="380" y="348" font-weight="600">Código y stack de Tarea 2</text>
+    <text x="380" y="364" fill="#6b665d">0x70F40000</text>
+
+    <rect x="285" y="385" width="190" height="42" fill="#fdfbf7" stroke="#1d1b18" stroke-dasharray="4 3"/>
+    <text x="380" y="403" font-weight="600">Tarea idle</text>
+    <text x="380" y="419" fill="#6b665d">0x70034000 · modo System</text>
+  </g>
+
+  <!-- arrows task 1 -->
+  <line x1="215" y1="105" x2="283" y2="116" stroke="#3d5a80" stroke-width="1.6" stroke-dasharray="5 3" marker-end="url(#a)"/>
+  <line x1="215" y1="115" x2="283" y2="171" stroke="#3d5a80" stroke-width="1.8" marker-end="url(#a)"/>
+  <line x1="215" y1="125" x2="283" y2="226" stroke="#3d5a80" stroke-width="1.8" marker-end="url(#a)"/>
+  <!-- arrows task 2 -->
+  <line x1="545" y1="105" x2="477" y2="116" stroke="#b4441c" stroke-width="1.6" stroke-dasharray="5 3" marker-end="url(#b)"/>
+  <line x1="545" y1="115" x2="477" y2="351" stroke="#b4441c" stroke-width="1.8" marker-end="url(#b)"/>
+  <line x1="545" y1="125" x2="477" y2="296" stroke="#b4441c" stroke-width="1.8" marker-end="url(#b)"/>
+
+  <!-- forbidden -->
+  <g stroke="#b4441c" stroke-width="2.4" stroke-linecap="round">
+    <line x1="150" y1="290" x2="180" y2="320"/><line x1="180" y1="290" x2="150" y2="320"/>
+  </g>
+  <text x="165" y="345" text-anchor="middle" font-size="12" fill="#1d1b18">Tarea 1 no puede</text>
+  <text x="165" y="361" text-anchor="middle" font-size="12" fill="#1d1b18">tocar el área de Tarea 2</text>
+  <text x="165" y="377" text-anchor="middle" font-size="12" fill="#6b665d">(no está en su tabla → Data Abort)</text>
+  <g stroke="#3d5a80" stroke-width="2.4" stroke-linecap="round">
+    <line x1="580" y1="200" x2="610" y2="230"/><line x1="610" y1="200" x2="580" y2="230"/>
+  </g>
+  <text x="595" y="255" text-anchor="middle" font-size="12" fill="#1d1b18">Y viceversa</text>
+
+  <text x="380" y="458" text-anchor="middle" font-size="11.5" fill="#6b665d">Línea punteada: acceso solo desde modo privilegiado (AP = 01). En este proyecto el mapeo es identidad: virtual = física.</text>
+</svg>

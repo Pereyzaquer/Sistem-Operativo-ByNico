@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 500" font-family="system-ui, Segoe UI, Arial, sans-serif" font-size="13">
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#1d1b18"/></marker>
+  </defs>
+  <rect width="760" height="500" rx="10" fill="#fdfbf7" stroke="#d9d3c5"/>
+  <text x="380" y="30" text-anchor="middle" font-size="16" font-weight="600" fill="#1d1b18">Cambio de contexto: de la Tarea 1 a la Tarea 2</text>
+
+  <!-- steps left -->
+  <g font-size="12.5" fill="#1d1b18">
+    <circle cx="40" cy="70" r="13" fill="#b4441c"/><text x="40" y="75" text-anchor="middle" fill="#fff" font-weight="600">1</text>
+    <text x="65" y="66" font-weight="600">Tarea 1 corre en modo User</text>
+    <text x="65" y="82" fill="#6b665d">El timer (0x10011000) vence y el GIC avisa a la CPU.</text>
+
+    <circle cx="40" cy="120" r="13" fill="#b4441c"/><text x="40" y="125" text-anchor="middle" fill="#fff" font-weight="600">2</text>
+    <text x="65" y="116" font-weight="600">La CPU entra en modo IRQ</text>
+    <text x="65" y="132" fill="#6b665d">Guarda CPSR en SPSR_irq y la vuelta en LR_irq.</text>
+
+    <circle cx="40" cy="170" r="13" fill="#b4441c"/><text x="40" y="175" text-anchor="middle" fill="#fff" font-weight="600">3</text>
+    <text x="65" y="166" font-weight="600">IRQ_handler guarda el contexto</text>
+    <text x="65" y="182" fill="#6b665d">STMFD {r0-r11}, SPSR, LR en el stack IRQ de la Tarea 1.</text>
+
+    <circle cx="40" cy="220" r="13" fill="#b4441c"/><text x="40" y="225" text-anchor="middle" fill="#fff" font-weight="600">4</text>
+    <text x="65" y="216" font-weight="600">scheduler(sp) decide y cambia</text>
+    <text x="65" y="232" fill="#6b665d">Guarda SP de la Tarea 1, elige la siguiente, escribe TTBR0</text>
+    <text x="65" y="246" fill="#6b665d">y el SP de usuario, y devuelve el SP IRQ de la Tarea 2.</text>
+
+    <circle cx="40" cy="285" r="13" fill="#b4441c"/><text x="40" y="290" text-anchor="middle" fill="#fff" font-weight="600">5</text>
+    <text x="65" y="281" font-weight="600">MOV SP, R0 y restaurar</text>
+    <text x="65" y="297" fill="#6b665d">LDMFD saca los registros de la Tarea 2; MOVS PC, LR</text>
+    <text x="65" y="311" fill="#6b665d">copia SPSR en CPSR y salta: ahora corre la Tarea 2.</text>
+  </g>
+
+  <!-- stacks right -->
+  <text x="520" y="62" text-anchor="middle" font-weight="600" fill="#1d1b18">Stack IRQ de cada tarea (crece hacia abajo)</text>
+
+  <rect x="430" y="80" width="110" height="200" fill="#dde6f0" stroke="#3d5a80"/>
+  <text x="485" y="98" text-anchor="middle" font-weight="600" fill="#3d5a80">Tarea 1</text>
+  <g font-family="monospace" font-size="11" fill="#1d1b18" text-anchor="middle">
+    <rect x="440" y="108" width="90" height="22" fill="#fdfbf7" stroke="#3d5a80"/><text x="485" y="123">r0 – r11</text>
+    <rect x="440" y="134" width="90" height="22" fill="#fdfbf7" stroke="#3d5a80"/><text x="485" y="149">LR (retorno)</text>
+    <rect x="440" y="160" width="90" height="22" fill="#fdfbf7" stroke="#3d5a80"/><text x="485" y="175">SPSR (CPSR)</text>
+  </g>
+  <text x="485" y="205" text-anchor="middle" font-size="11" fill="#6b665d">← tcb.stack_irq</text>
+  <text x="485" y="222" text-anchor="middle" font-size="11" fill="#6b665d">+ stack_usr aparte</text>
+
+  <rect x="580" y="80" width="110" height="200" fill="#f0dcd2" stroke="#b4441c"/>
+  <text x="635" y="98" text-anchor="middle" font-weight="600" fill="#b4441c">Tarea 2</text>
+  <g font-family="monospace" font-size="11" fill="#1d1b18" text-anchor="middle">
+    <rect x="590" y="108" width="90" height="22" fill="#fdfbf7" stroke="#b4441c"/><text x="635" y="123">r0 – r11</text>
+    <rect x="590" y="134" width="90" height="22" fill="#fdfbf7" stroke="#b4441c"/><text x="635" y="149">LR (retorno)</text>
+    <rect x="590" y="160" width="90" height="22" fill="#fdfbf7" stroke="#b4441c"/><text x="635" y="175">SPSR (CPSR)</text>
+  </g>
+  <text x="635" y="205" text-anchor="middle" font-size="11" fill="#6b665d">← tcb.stack_irq</text>
+  <text x="635" y="222" text-anchor="middle" font-size="11" fill="#6b665d">+ stack_usr aparte</text>
+
+  <!-- SP arrow -->
+  <path d="M 545 250 C 560 275, 575 275, 592 250" fill="none" stroke="#1d1b18" stroke-width="1.6" marker-end="url(#a)"/>
+  <text x="568" y="296" text-anchor="middle" font-size="12" font-weight="600" fill="#1d1b18">SP_irq</text>
+
+  <!-- TCB -->
+  <rect x="330" y="335" width="400" height="140" rx="6" fill="#ece7db" stroke="#6b665d"/>
+  <text x="530" y="358" text-anchor="middle" font-weight="600" fill="#1d1b18">Lo que el kernel cambia en cada switch</text>
+  <g font-size="12.5" fill="#1d1b18">
+    <text x="350" y="384">•  SP del modo IRQ  → dónde está el contexto guardado</text>
+    <text x="350" y="404">•  SP de usuario (via modo System)  → el stack de la tarea</text>
+    <text x="350" y="424">•  TTBR0  → qué memoria ve la tarea</text>
+    <text x="350" y="444">•  PC/CPSR  → se restauran solos con MOVS PC, LR</text>
+    <text x="350" y="464" fill="#6b665d">Los datos de cada tarea viven en su TCB (struct en sys_tick.h).</text>
+  </g>
+
+  <text x="30" y="360" font-size="12" fill="#6b665d">¿Por qué hace falta?</text>
+  <text x="30" y="380" font-size="12" fill="#1d1b18">Hay una sola CPU. Para que parezca que</text>
+  <text x="30" y="396" font-size="12" fill="#1d1b18">las tareas corren a la vez, el kernel</text>
+  <text x="30" y="412" font-size="12" fill="#1d1b18">las alterna cada pocos ticks y guarda</text>
+  <text x="30" y="428" font-size="12" fill="#1d1b18">todo lo necesario para retomarlas</text>
+  <text x="30" y="444" font-size="12" fill="#1d1b18">exactamente donde quedaron.</text>
+</svg>

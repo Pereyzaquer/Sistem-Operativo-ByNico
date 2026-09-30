@@ -1,0 +1,6 @@
+#Ignoro todas las funciones creadas por el makefile
+*.elf
+*.bin
+*.lst
+*.txt
+*.map

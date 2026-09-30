@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 640" font-family="system-ui, Segoe UI, Arial, sans-serif" font-size="13">
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#1d1b18"/></marker>
+  </defs>
+  <rect width="760" height="640" rx="10" fill="#fdfbf7" stroke="#d9d3c5"/>
+  <text x="380" y="30" text-anchor="middle" font-size="16" font-weight="600" fill="#1d1b18">Del reset al sistema operativo funcionando</text>
+
+  <g font-size="12.5">
+    <!-- 1 -->
+    <rect x="30" y="52" width="700" height="58" rx="6" fill="#f0dcd2" stroke="#b4441c"/>
+    <text x="46" y="75" font-weight="600" fill="#1d1b18">1 · Reset  →  0x70010000  (_reset_vector: B _start)</text>
+    <text x="46" y="94" fill="#6b665d">Modo SVC, IRQ/FIQ enmascaradas, MMU apagada. El linker pone .reset_vector_text primero (memmap.ld).</text>
+    <line x1="380" y1="110" x2="380" y2="126" stroke="#1d1b18" stroke-width="1.6" marker-end="url(#a)"/>
+    <!-- 2 -->
+    <rect x="30" y="128" width="700" height="58" rx="6" fill="#fdfbf7" stroke="#1d1b18"/>
+    <text x="46" y="151" font-weight="600" fill="#1d1b18">2 · _table_copy: copiar la tabla de vectores a 0x00000000  (assembly)</text>
+    <text x="46" y="170" fill="#6b665d">8 instrucciones LDR PC + 8 direcciones de handlers (64 bytes), en orden ascendente: Reset, UND, SVC, PABT, DABT, —, IRQ, FIQ.</text>
+    <line x1="380" y1="186" x2="380" y2="202" stroke="#1d1b18" stroke-width="1.6" marker-end="url(#a)"/>
+    <!-- 3 -->
+    <rect x="30" y="204" width="700" height="58" rx="6" fill="#fdfbf7" stroke="#1d1b18"/>
+    <text x="46" y="227" font-weight="600" fill="#1d1b18">3 · _STACK_INIT: un stack pointer por modo  (assembly)</text>
+    <text x="46" y="246" fill="#6b665d">MSR cpsr_c cambia a IRQ, FIQ, ABT, UND, System y SVC, y en cada uno se carga SP con el tope definido en memmap.ld.</text>
+    <line x1="380" y1="262" x2="380" y2="278" stroke="#1d1b18" stroke-width="1.6" marker-end="url(#a)"/>
+    <!-- 4 -->
+    <rect x="30" y="280" width="700" height="150" rx="6" fill="#dde6f0" stroke="#3d5a80"/>
+    <text x="46" y="303" font-weight="600" fill="#1d1b18">4 · __board_init()  (C, sección .init)</text>
+    <text x="60" y="325" fill="#1d1b18">a) vma_copy(): copia kernel, idle y tareas de su dirección de carga (LMA) a la de ejecución (VMA)</text>
+    <text x="60" y="347" fill="#1d1b18">b) __gic_init(): habilita en el GIC la IRQ del timer y la interfaz de CPU</text>
+    <text x="60" y="369" fill="#1d1b18">c) __timer_init(): timer periódico de 32 bits, con interrupción habilitada</text>
+    <text x="60" y="391" fill="#1d1b18">d) initTask(): arma un contexto falso en el stack de cada tarea (LR = función, SPSR = modo)</text>
+    <text x="60" y="413" fill="#1d1b18">e) inicializar_mmu(): arma las tablas L1/L2, carga TTBR0 y DACR, y prende el bit M de SCTLR</text>
+    <line x1="380" y1="430" x2="380" y2="446" stroke="#1d1b18" stroke-width="1.6" marker-end="url(#a)"/>
+    <!-- 5 -->
+    <rect x="30" y="448" width="700" height="58" rx="6" fill="#fdfbf7" stroke="#1d1b18"/>
+    <text x="46" y="471" font-weight="600" fill="#1d1b18">5 · Salto a la primera tarea  (assembly)</text>
+    <text x="46" y="490" fill="#6b665d">MSR SPSR, #USR_MODE  y  MOVS PC, Tarea_1: al copiar SPSR en CPSR, la CPU pasa a modo User y salta a Tarea_1.</text>
+    <line x1="380" y1="506" x2="380" y2="522" stroke="#1d1b18" stroke-width="1.6" marker-end="url(#a)"/>
+    <!-- 6 -->
+    <rect x="30" y="524" width="700" height="92" rx="6" fill="#ece7db" stroke="#6b665d"/>
+    <text x="46" y="547" font-weight="600" fill="#1d1b18">6 · Sistema operativo en régimen</text>
+    <text x="46" y="568" fill="#1d1b18">Timer → IRQ_handler → scheduler → cambio de contexto (Tarea 1 → Tarea 2 → idle → Tarea 1 …)</text>
+    <text x="46" y="588" fill="#1d1b18">Las tareas piden servicios al kernel con SVC #0 (enviar / recibir por el pipeline).</text>
+    <text x="46" y="606" fill="#6b665d">La MMU ya está activa: cada tarea corre con su propio TTBR0.</text>
+  </g>
+</svg>
