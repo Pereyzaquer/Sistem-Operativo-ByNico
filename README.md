@@ -70,9 +70,13 @@ make clean
 
 El handler de IRQ apila `r0–r11`, `SPSR` y `LR` en el stack IRQ de la tarea actual, el scheduler devuelve el SP de la tarea siguiente (y cambia `TTBR0` y el SP de usuario) y `MOVS PC, LR` retoma la nueva tarea. `initTask()` fabrica un contexto inicial para cada tarea.
 
-## Límites conocidos
+## Simulación y depuración
 
-- Mapeo de identidad; sin traducción virtual→física distinta por tarea.
-- Las tablas de páginas se arman una sola vez, al inicio. No hay manejo de faltas de página ni asignación dinámica.
-- Scheduler round-robin con tiempos fijos, sin prioridades.
-- Diseñado para QEMU; no probado en hardware real.
+El sistema corre en una **simulación de un microprocesador Cortex-A8** dentro de la computadora, usando QEMU. Para depurarlo se usó **GDB** con la interfaz gráfica **DDD**:
+
+```bash
+make debug
+ddd --debugger gdb-multiarch obj/ejer3.elf
+```
+
+Desde DDD se ejecuta paso a paso, se ponen breakpoints y se inspeccionan registros (`CPSR`, `SP` por modo, `TTBR0`) y memoria.
