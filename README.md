@@ -1,4 +1,4 @@
-# SistemaOperativoByNico
+# Sistem-Operativo-ByNico
 
 Un mini sistema operativo *bare-metal* para **ARM Cortex-A8**, escrito en C y Assembly, que corre en **QEMU** (placa `realview-pb-a8`).
 
