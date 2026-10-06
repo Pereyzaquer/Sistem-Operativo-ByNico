@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 640" font-family="system-ui, Segoe UI, Arial, sans-serif" font-size="13">
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#1d1b18"/></marker>
+  </defs>
+  <rect width="760" height="640" rx="10" fill="#fdfbf7" stroke="#d9d3c5"/>
+  <text x="380" y="30" text-anchor="middle" font-size="16" font-weight="600" fill="#1d1b18">El camino de un dato: del sensor al navegador</text>
+
+  <!-- zone labels -->
+  <rect x="20" y="48" width="720" height="100" rx="8" fill="#ece7db" stroke="#6b665d" stroke-dasharray="5 4"/>
+  <text x="34" y="66" font-size="11" font-family="monospace" fill="#6b665d">HARDWARE</text>
+  <rect x="20" y="160" width="720" height="176" rx="8" fill="#f0dcd2" stroke="#b4441c" stroke-dasharray="5 4"/>
+  <text x="34" y="178" font-size="11" font-family="monospace" fill="#b4441c">ESPACIO DE KERNEL  (mpu6050_driver.ko)</text>
+  <rect x="20" y="348" width="720" height="252" rx="8" fill="#dde6f0" stroke="#3d5a80" stroke-dasharray="5 4"/>
+  <text x="34" y="366" font-size="11" font-family="monospace" fill="#3d5a80">ESPACIO DE USUARIO  (td3_server)</text>
+
+  <!-- hardware -->
+  <rect x="40" y="80" width="200" height="56" rx="6" fill="#fdfbf7" stroke="#1d1b18"/>
+  <text x="140" y="103" text-anchor="middle" font-weight="600" fill="#1d1b18">MPU6050</text>
+  <text x="140" y="121" text-anchor="middle" font-size="11.5" fill="#6b665d">acel + gyro + temp · FIFO 14 B/muestra</text>
+  <rect x="300" y="80" width="200" height="56" rx="6" fill="#fdfbf7" stroke="#1d1b18"/>
+  <text x="400" y="103" text-anchor="middle" font-weight="600" fill="#1d1b18">Controlador I2C2 (AM335x)</text>
+  <text x="400" y="121" text-anchor="middle" font-size="11.5" fill="#6b665d">registros en 0x4819C000</text>
+  <line x1="240" y1="108" x2="298" y2="108" stroke="#1d1b18" stroke-width="1.6" marker-end="url(#a)"/>
+  <line x1="298" y1="120" x2="242" y2="120" stroke="#1d1b18" stroke-width="1.6" marker-end="url(#a)"/>
+  <text x="270" y="100" text-anchor="middle" font-size="10.5" fill="#6b665d">SDA/SCL</text>
+  <rect x="560" y="80" width="160" height="56" rx="6" fill="#fdfbf7" stroke="#1d1b18"/>
+  <text x="640" y="103" text-anchor="middle" font-weight="600" fill="#1d1b18">GIC / IRQ</text>
+  <text x="640" y="121" text-anchor="middle" font-size="11.5" fill="#6b665d">avisa cada evento del bus</text>
+  <line x1="500" y1="108" x2="558" y2="108" stroke="#1d1b18" stroke-width="1.6" marker-end="url(#a)"/>
+
+  <!-- kernel -->
+  <rect x="40" y="192" width="200" height="120" rx="6" fill="#fdfbf7" stroke="#b4441c"/>
+  <text x="140" y="214" text-anchor="middle" font-weight="600" fill="#1d1b18">probe()</text>
+  <text x="140" y="234" text-anchor="middle" font-size="11.5" fill="#1d1b18">ioremap de registros</text>
+  <text x="140" y="250" text-anchor="middle" font-size="11.5" fill="#1d1b18">habilita reloj + pines</text>
+  <text x="140" y="266" text-anchor="middle" font-size="11.5" fill="#1d1b18">configura I2C a 100 kHz</text>
+  <text x="140" y="282" text-anchor="middle" font-size="11.5" fill="#1d1b18">WHO_AM_I, reset, rangos</text>
+  <text x="140" y="298" text-anchor="middle" font-size="11.5" fill="#6b665d">datos desde el Device Tree</text>
+  <rect x="270" y="192" width="200" height="120" rx="6" fill="#fdfbf7" stroke="#b4441c"/>
+  <text x="370" y="214" text-anchor="middle" font-weight="600" fill="#1d1b18">Manejador de IRQ + wait queue</text>
+  <text x="370" y="238" text-anchor="middle" font-size="11.5" fill="#1d1b18">lee IRQSTATUS y avisa:</text>
+  <text x="370" y="254" text-anchor="middle" font-size="11.5" fill="#1d1b18">ARDY · NACK · RRDY · XRDY</text>
+  <text x="370" y="270" text-anchor="middle" font-size="11.5" fill="#1d1b18">y despierta a quien espera</text>
+  <text x="370" y="290" text-anchor="middle" font-size="11.5" fill="#6b665d">mpu_read_reg / mpu_write_reg</text>
+  <rect x="500" y="192" width="220" height="120" rx="6" fill="#fdfbf7" stroke="#b4441c"/>
+  <text x="610" y="214" text-anchor="middle" font-weight="600" fill="#1d1b18">/dev/mpu6050</text>
+  <text x="610" y="238" text-anchor="middle" font-size="11.5" fill="#1d1b18">read(): espera ≥ 1 frame en el FIFO,</text>
+  <text x="610" y="254" text-anchor="middle" font-size="11.5" fill="#1d1b18">lo lee byte a byte y lo copia</text>
+  <text x="610" y="270" text-anchor="middle" font-size="11.5" fill="#1d1b18">con copy_to_user()</text>
+  <text x="610" y="290" text-anchor="middle" font-size="11.5" fill="#6b665d">ioctl(): contador de lecturas</text>
+  <line x1="400" y1="136" x2="400" y2="190" stroke="#1d1b18" stroke-width="1.6" marker-end="url(#a)" stroke-dasharray="4 3"/>
+  <line x1="470" y1="252" x2="498" y2="252" stroke="#1d1b18" stroke-width="1.6" marker-end="url(#a)"/>
+
+  <!-- user -->
+  <rect x="40" y="380" width="200" height="90" rx="6" fill="#fdfbf7" stroke="#3d5a80"/>
+  <text x="140" y="402" text-anchor="middle" font-weight="600" fill="#1d1b18">Proceso "sensor"</text>
+  <text x="140" y="422" text-anchor="middle" font-size="11.5" fill="#1d1b18">único que lee el device</text>
+  <text x="140" y="438" text-anchor="middle" font-size="11.5" fill="#1d1b18">lotes de 10 muestras</text>
+  <text x="140" y="454" text-anchor="middle" font-size="11.5" fill="#1d1b18">+ filtro de media móvil</text>
+  <rect x="270" y="380" width="200" height="90" rx="6" fill="#ece7db" stroke="#6b665d"/>
+  <text x="370" y="402" text-anchor="middle" font-weight="600" fill="#1d1b18">Memoria compartida</text>
+  <text x="370" y="422" text-anchor="middle" font-size="11.5" fill="#1d1b18">mmap anónimo</text>
+  <text x="370" y="438" text-anchor="middle" font-size="11.5" fill="#1d1b18">crudo + promediado + historial</text>
+  <text x="370" y="454" text-anchor="middle" font-size="11.5" fill="#6b665d">contador seq (estilo seqlock)</text>
+  <rect x="500" y="380" width="220" height="90" rx="6" fill="#fdfbf7" stroke="#3d5a80"/>
+  <text x="610" y="402" text-anchor="middle" font-weight="600" fill="#1d1b18">Un proceso hijo por cliente</text>
+  <text x="610" y="422" text-anchor="middle" font-size="11.5" fill="#1d1b18">fork() en cada accept()</text>
+  <text x="610" y="438" text-anchor="middle" font-size="11.5" fill="#1d1b18">máx. de conexiones configurable</text>
+  <text x="610" y="454" text-anchor="middle" font-size="11.5" fill="#6b665d">SIGUSR2 recarga la config</text>
+  <line x1="240" y1="425" x2="268" y2="425" stroke="#1d1b18" stroke-width="1.6" marker-end="url(#a)"/>
+  <line x1="498" y1="425" x2="472" y2="425" stroke="#1d1b18" stroke-width="1.6" marker-end="url(#a)"/>
+  <line x1="610" y1="312" x2="150" y2="378" stroke="#1d1b18" stroke-width="1.6" marker-end="url(#a)"/>
+  <text x="400" y="352" text-anchor="middle" font-size="11" fill="#1d1b18" transform="rotate(-8 400 352)">read() de 14 bytes por muestra</text>
+
+  <!-- clients -->
+  <rect x="40" y="510" width="200" height="70" rx="6" fill="#fdfbf7" stroke="#3d5a80"/>
+  <text x="140" y="533" text-anchor="middle" font-weight="600" fill="#1d1b18">HTTP  GET /</text>
+  <text x="140" y="551" text-anchor="middle" font-size="11.5" fill="#1d1b18">dashboard con gráficos</text>
+  <text x="140" y="567" text-anchor="middle" font-size="11.5" fill="#6b665d">HTML + polilíneas SVG</text>
+  <rect x="270" y="510" width="200" height="70" rx="6" fill="#fdfbf7" stroke="#3d5a80"/>
+  <text x="370" y="533" text-anchor="middle" font-weight="600" fill="#1d1b18">HTTP  GET /events</text>
+  <text x="370" y="551" text-anchor="middle" font-size="11.5" fill="#1d1b18">stream en vivo (SSE)</text>
+  <rect x="500" y="510" width="220" height="70" rx="6" fill="#fdfbf7" stroke="#3d5a80"/>
+  <text x="610" y="533" text-anchor="middle" font-weight="600" fill="#1d1b18">TCP binario</text>
+  <text x="610" y="551" text-anchor="middle" font-size="11.5" fill="#1d1b18">1 byte pedido → 14 × int16</text>
+  <text x="610" y="567" text-anchor="middle" font-size="11.5" fill="#6b665d">(7 crudos + 7 promediados)</text>
+  <line x1="610" y1="470" x2="150" y2="508" stroke="#1d1b18" stroke-width="1.2" marker-end="url(#a)" stroke-dasharray="4 3"/>
+  <line x1="610" y1="470" x2="370" y2="508" stroke="#1d1b18" stroke-width="1.2" marker-end="url(#a)" stroke-dasharray="4 3"/>
+  <line x1="610" y1="470" x2="610" y2="508" stroke="#1d1b18" stroke-width="1.2" marker-end="url(#a)" stroke-dasharray="4 3"/>
+
+  <text x="380" y="622" text-anchor="middle" font-size="11.5" fill="#6b665d">Solo el proceso "sensor" toca el device. Los procesos de cada cliente leen la memoria compartida.</text>
+</svg>

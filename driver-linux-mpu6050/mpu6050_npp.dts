@@ -1,0 +1,69 @@
+/**
+ * @file mpu6050_npp.dts
+ * @brief Device Tree Overlay para bindear el platform driver del MPU6050.
+ * @details
+ * Mantiene el contenido original del encabezado, pero en estilo Doxygen.
+ */
+
+/*
+ * Overlay: hace que tu platform driver (compatible = "i2c_mpu6050")
+ * se binde al nodo del controlador I2C2 (AM335x), en vez de crear un i2c_client.
+ *
+ * IMPORTANTE:
+ * - Este enfoque reemplaza el "compatible" del controlador I2C2, por lo que el
+ *   driver estándar del kernel para i2c2 deja de manejar ese controlador.
+ * - Es el enfoque que corresponde si tu driver implementa I2C por MMIO + IRQ
+ *   y usa platform_get_irq().
+ */
+
+/dts-v1/;
+/plugin/;
+
+/ {
+    compatible = "ti,beaglebone", "ti,beaglebone-black";
+    part-number = "MPU6050-NPP";
+    version = "00A0";
+
+    /* Helper para ver overlays cargados en /proc/device-tree/chosen/overlays/ */
+    fragment@0 {
+        target-path = "/";
+        __overlay__ {
+            chosen {
+                overlays {
+                    /*
+                     * Nota: __TIMESTAMP__ funciona si el DTS pasa por el preprocesador (cpp).
+                     * Como acá compilamos con dtc directo, usamos un string fijo.
+                     */
+                    MPU6050-NPP-00A0 = "loaded";
+                };
+            };
+        };
+    };
+
+    /*
+     * En el Device Tree base de BBB (kernels TI/BeagleBoard), el controlador I2C2
+     * suele estar bajo este target-module. Este overlay reemplaza el nodo i2c@0
+     * (I2C2) para que el compatible matchee tu platform_driver.
+     */
+    fragment@1 {
+        target-path = "/ocp/interconnect@48000000/segment@100000/target-module@9c000";
+        __overlay__ {
+            i2c@0 {
+                compatible = "i2c_mpu6050";
+                status = "okay";
+
+                /* Configuración consumida por el driver (defaults: 200/0/2/0) */
+                mpu6050,sample-rate-hz = <200>; /* SampleRate = GyroRate/(1+SMPLRT_DIV) */
+                mpu6050,dlpf-cfg = <0>;         /* CONFIG.DLPF_CFG (0..7) */
+                mpu6050,gyro-fs = <2>;          /* GYRO_CONFIG.FS_SEL: 0=250,1=500,2=1000,3=2000 dps */
+                mpu6050,accel-fs = <0>;         /* ACCEL_CONFIG.AFS_SEL: 0=2g,1=4g,2=8g,3=16g */
+
+                /* Opcional (requisito 5.4): interrupción de hardware del MPU6050 (INT pin).
+                 * Si cableás INT a un GPIO de la BBB, describilo como drdy-gpios.
+                 * Ejemplo (NO copiar tal cual sin ajustar gpioX/linea):
+                 *   drdy-gpios = <&gpio1 17 0>;
+                 */
+            };
+        };
+    };
+};

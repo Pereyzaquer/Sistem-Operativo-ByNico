@@ -1,0 +1,12 @@
+bin/
+*.ko
+*.o
+*.mod
+*.mod.c
+*.dtbo
+*.symvers
+modules.order
+.tmp_versions/
+test/server/td3_server
+test/server/scr/filter.s
+.td3_server.pid

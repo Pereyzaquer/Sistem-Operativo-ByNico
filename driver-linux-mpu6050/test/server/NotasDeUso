@@ -1,0 +1,10 @@
+/**
+ * @file NotasDeUso
+ * @brief Notas rápidas de compilación y uso del servidor.
+ */
+
+make
+./td3_server -b 0.0.0.0 -p 8080 -d /dev/mpu6050 -c server.conf
+
+
+kill -USR2 $(pidof td3_server)

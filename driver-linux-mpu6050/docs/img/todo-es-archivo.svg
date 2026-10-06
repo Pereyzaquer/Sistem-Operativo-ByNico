@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 470" font-family="system-ui, Segoe UI, Arial, sans-serif" font-size="13">
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#1d1b18"/></marker>
+  </defs>
+  <rect width="760" height="470" rx="10" fill="#fdfbf7" stroke="#d9d3c5"/>
+  <text x="380" y="30" text-anchor="middle" font-size="16" font-weight="600" fill="#1d1b18">En Linux todo se toca con las mismas cinco llamadas</text>
+
+  <!-- program -->
+  <rect x="250" y="52" width="260" height="46" rx="6" fill="#dde6f0" stroke="#3d5a80"/>
+  <text x="380" y="72" text-anchor="middle" font-weight="600" fill="#1d1b18">Tu programa</text>
+  <text x="380" y="89" text-anchor="middle" font-family="monospace" font-size="12" fill="#1d1b18">open · read · write · ioctl · close</text>
+  <line x1="380" y1="98" x2="380" y2="122" stroke="#1d1b18" stroke-width="1.6" marker-end="url(#a)"/>
+
+  <!-- VFS -->
+  <rect x="150" y="124" width="460" height="46" rx="6" fill="#f0dcd2" stroke="#b4441c"/>
+  <text x="380" y="144" text-anchor="middle" font-weight="600" fill="#1d1b18">VFS (capa de archivos del kernel)</text>
+  <text x="380" y="161" text-anchor="middle" font-size="12" fill="#6b665d">mira el tipo de archivo y deriva a quien corresponda</text>
+
+  <!-- branches -->
+  <g font-size="12">
+    <line x1="230" y1="170" x2="90" y2="212" stroke="#1d1b18" stroke-width="1.4" marker-end="url(#a)"/>
+    <line x1="320" y1="170" x2="265" y2="212" stroke="#1d1b18" stroke-width="1.4" marker-end="url(#a)"/>
+    <line x1="380" y1="170" x2="435" y2="212" stroke="#1d1b18" stroke-width="1.4" marker-end="url(#a)"/>
+    <line x1="530" y1="170" x2="620" y2="212" stroke="#1d1b18" stroke-width="1.4" marker-end="url(#a)"/>
+
+    <rect x="20" y="214" width="150" height="66" rx="6" fill="#fdfbf7" stroke="#6b665d"/>
+    <text x="95" y="236" text-anchor="middle" font-weight="600" fill="#1d1b18">Archivo regular</text>
+    <text x="95" y="254" text-anchor="middle" font-family="monospace" fill="#3d5a80">-  /etc/hostname</text>
+    <text x="95" y="270" text-anchor="middle" font-size="11" fill="#6b665d">sistema de archivos</text>
+
+    <rect x="190" y="214" width="150" height="66" rx="6" fill="#fdfbf7" stroke="#6b665d"/>
+    <text x="265" y="236" text-anchor="middle" font-weight="600" fill="#1d1b18">Dispositivo de bloque</text>
+    <text x="265" y="254" text-anchor="middle" font-family="monospace" fill="#3d5a80">b  /dev/mmcblk0</text>
+    <text x="265" y="270" text-anchor="middle" font-size="11" fill="#6b665d">acceso por bloques</text>
+
+    <rect x="360" y="214" width="150" height="66" rx="6" fill="#f0dcd2" stroke="#b4441c" stroke-width="2"/>
+    <text x="435" y="236" text-anchor="middle" font-weight="600" fill="#1d1b18">Dispositivo de carácter</text>
+    <text x="435" y="254" text-anchor="middle" font-family="monospace" fill="#b4441c">c  /dev/mpu6050</text>
+    <text x="435" y="270" text-anchor="middle" font-size="11" fill="#6b665d">flujo de bytes → mi driver</text>
+
+    <rect x="530" y="214" width="210" height="66" rx="6" fill="#fdfbf7" stroke="#6b665d"/>
+    <text x="635" y="236" text-anchor="middle" font-weight="600" fill="#1d1b18">Socket · Pipe</text>
+    <text x="635" y="254" text-anchor="middle" font-family="monospace" fill="#3d5a80">s  /  p</text>
+    <text x="635" y="270" text-anchor="middle" font-size="11" fill="#6b665d">red y comunicación entre procesos</text>
+  </g>
+
+  <!-- second row -->
+  <rect x="20" y="300" width="220" height="60" rx="6" fill="#fdfbf7" stroke="#6b665d"/>
+  <text x="130" y="322" text-anchor="middle" font-weight="600" fill="#1d1b18">Directorio</text>
+  <text x="130" y="340" text-anchor="middle" font-family="monospace" fill="#3d5a80">d  /dev</text>
+  <text x="130" y="354" text-anchor="middle" font-size="11" fill="#6b665d">un archivo que lista nombres</text>
+  <rect x="270" y="300" width="220" height="60" rx="6" fill="#fdfbf7" stroke="#6b665d"/>
+  <text x="380" y="322" text-anchor="middle" font-weight="600" fill="#1d1b18">Enlace simbólico</text>
+  <text x="380" y="340" text-anchor="middle" font-family="monospace" fill="#3d5a80">l  /dev/stdin</text>
+  <text x="380" y="354" text-anchor="middle" font-size="11" fill="#6b665d">un archivo que apunta a otro</text>
+  <rect x="520" y="300" width="220" height="60" rx="6" fill="#fdfbf7" stroke="#6b665d"/>
+  <text x="630" y="322" text-anchor="middle" font-weight="600" fill="#1d1b18">Archivos virtuales</text>
+  <text x="630" y="340" text-anchor="middle" font-family="monospace" fill="#3d5a80">/proc  /sys</text>
+  <text x="630" y="354" text-anchor="middle" font-size="11" fill="#6b665d">estado del kernel, sin disco</text>
+
+  <!-- ls -l -->
+  <rect x="20" y="385" width="720" height="62" rx="6" fill="#1d1b18"/>
+  <text x="36" y="410" font-family="monospace" font-size="13" fill="#ece7db">$ ls -l /dev/mpu6050</text>
+  <text x="36" y="432" font-family="monospace" font-size="13" fill="#e07a4f">crw-rw---- 1 root i2c 240, 0 sep 30 10:12 /dev/mpu6050</text>
+  <text x="690" y="410" text-anchor="end" font-size="11" fill="#a29b8b">ejemplo ilustrativo · la 1ª letra es el tipo</text>
+</svg>
